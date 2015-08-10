@@ -1,0 +1,7 @@
+#!/bin/bash
+
+. ./config
+docUrl="https://$user:$pass@$user.cloudant.com/$db"
+curl='curl -sS'
+
+$curl -X 'PUT' --data-binary @_design_docs/my_design_doc.json $docUrl -H "Content-Type: application/json"

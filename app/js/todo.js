@@ -6,26 +6,26 @@ $( document ).ready(function() {
 // - General Setup -
 // --------------------
 
-  // -- Database Setup --
-  var cloudant_url = 'https://' + user + ':' + pass + '@' + username + '.cloudant.com';
-  var remoteCouch = cloudant_url + '/todos'; // remote CouchDB Instance
+  // - Database Setup (Variables come from config File)-
+  var cloudant_url = 'https://' + user + ':' + pass + '@' + username + '.cloudant.com'; // Set the general Cloudant URL
+  var remoteCouch = cloudant_url + '/' + db; // Set the full path to the "remote Couch" (aka. Cloudant)
 
-  // Create a new local PouchDB
-  var db = new PouchDB('todos'),
-    remote = remoteCouch,
-    opts = { continuous: true };
+  // - Create a new local PouchDB -
+  var db = new PouchDB('todos'), // Create a local CouchDB (aka. PouchDB)
+    remote = remoteCouch, // Give it the remote Couch as a variable
+    opts = { continuous: true }; // Make the replication continous
 
-    // Listen to Changes Feed
-    db.info(function(err, info) {
-      db.changes({ since: info.update_seq, live: true }).on('change', changes);
-      console.log(err || info);
-    });
+  // - Listen to Changes Feed -
+  db.info(function(err, info) {
+    db.changes({ since: info.update_seq, live: true }).on('change', changes); // If something changes on the local db, call the changes() Function
+    console.log(err || info);
+  });
 
   // - Keys and Inputs -
   var enterKey = 13; // Code for Enter Key
   var todoInput = $('#todo_input').get(0); // Dom Reference for ToDo input Field
-  var textInput = $('#text_input').get(0); // Dom Reference for ToDo input Field
-  var syncbtn = $('#syncbtn').get(0);
+  var textInput = $('#text_input').get(0); // Dom Reference for Text input Field
+  var syncbtn = $('#syncbtn').get(0); // Dom Reference for Sync button
 
   // - Global Variables -
   var messages = [];
@@ -40,6 +40,7 @@ $( document ).ready(function() {
   myCss.type = 'text/css';
   myCss.rel = 'stylesheet';
 
+  // - Workaround for iPhone & iPad -
   if((navigator.userAgent.match(/iPhone/i)) || (navigator.userAgent.match(/iPod/i))) {
     myCss.href = 'css/iPhone.css';
     document.getElementsByTagName('head')[0].appendChild(myCss);
