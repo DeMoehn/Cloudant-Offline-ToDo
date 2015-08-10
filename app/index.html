@@ -12,11 +12,10 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>Cloudant Offline ToDo</title>
     <!-- SCRIPTS -->
-    <script src="src/jquery-2.1.3.min.js" type="application/javascript"></script>
+    <script src="src/jquery-2.1.4.min.js" type="application/javascript"></script>
 	  <script src="src/KelpJSONView.js" type="application/javascript"></script>
-    <script src="src/pouchdb-3.3.0.min.js" type="application/javascript"></script>
+    <script src="src/pouchdb-4.0.0.min.js" type="application/javascript"></script>
     <script src="js/config" type="application/javascript" ></script>
-    <script src="js/todo.js" type="application/javascript"></script>
     <!-- CSS -->
     <link href='src/KelpJSONView.css' rel='stylesheet' type='text/css'/>
     <link href="css/style.css" rel="stylesheet" type="text/css">
@@ -45,8 +44,8 @@
 
         <!-- Tab container -->
         <div id="wrapper-tabs">
-          <div class="tab" id="default">default</div>
-          <div class="plustab" id="plustab">+</div>
+          <div id="default" class="tab" >default</div>
+          <div id="plustab" class="plustab">+</div>
         </div>
 
         <!-- Center container -->
@@ -101,5 +100,7 @@
      <img src="img/edit_icon.png" width="1" height="1" alt="Preload Image 06" />
      <img src="img/edit_hover.png" width="1" height="1" alt="Preload Image 07" />
    </div>
+
+  <script src="js/todo.js" type="application/javascript"></script>
   </body>
 </html>

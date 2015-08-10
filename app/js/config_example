@@ -1,3 +1,4 @@
-user='joe';
-pass='secret';
-db='joedb';
+accountname='ACCOUNTNAME';
+user='USER/APIKEY';
+pass='PW/APIKEY';
+db='DB';
