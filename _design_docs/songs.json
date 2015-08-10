@@ -1,0 +1,10 @@
+{
+  "_id": "_design/Songs",
+  "views": {
+    "showArtists": {
+      "map": "Array.prototype.notContains = function (myObj) {\n   for (var i in this) {\n       if (this[i] == myObj) return false;\n   }\n   return true;\n};\n\nfunction(doc) {\n    var myArtist;\n    var artists = [];\n    if(doc.songs) {\n        for (myArtist in doc.songs) {\n            if(artists.notContains(doc.songs[myArtist].artist)) {\n                emit(doc.songs[myArtist].artist, null);\n                artists.push(doc.songs[myArtist].artist);\n            }\n        }\n    }\n}",
+      "reduce": "_count"
+    }
+  },
+  "language": "javascript"
+}

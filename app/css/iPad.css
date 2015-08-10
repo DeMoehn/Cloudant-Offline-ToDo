@@ -1,0 +1,25 @@
+#totalwrapper {
+  width: 728px;
+}
+
+#wrapper-status, #toddle {
+  max-width: 718px;
+  overflow: hidden;
+  font-size: 10px;
+}
+
+#wrapper-left {
+  width: 708px;
+}
+
+#wrapper-down{
+  width: 708px;
+}
+
+.todo_input {
+  width: 688px;
+}
+
+#online {
+  left: 0px;
+}

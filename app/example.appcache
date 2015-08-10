@@ -1,0 +1,34 @@
+CACHE MANIFEST
+
+CACHE:
+#Cloudant Offline ToDo-List: V0.0.3
+
+#HTML
+index.html
+
+#JS
+src/jquery-2.1.3.min.js
+src/KelpJSONView.js
+src/pouchdb-3.3.0.min.js
+js/config
+js/todo.js
+
+#CSS
+src/KelpJSONView.css
+css/style.css
+css/iPhone.css
+css/iPad.css
+
+#Images
+img/checkbox_off.png
+img/checkbox_on.png
+img/checkmark.png
+img/cloudant.png
+img/delete_hover.png
+img/delete_icon.png
+img/edit_hover.png
+img/edit_icon.png
+img/favicon.ico
+
+NETWORK:
+*

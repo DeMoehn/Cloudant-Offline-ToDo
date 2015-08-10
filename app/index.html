@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en"> <!--  manifest="example.appcache" -->
+  <head>
+    <!-- META Tags -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="Cloudant Offline ToDo List">
+    <meta name="author" content="Sebastian Moehn">
+    <!-- Apple Tags -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Cloudant Offline ToDo</title>
+    <!-- SCRIPTS -->
+    <script src="src/jquery-2.1.3.min.js" type="application/javascript"></script>
+	  <script src="src/KelpJSONView.js" type="application/javascript"></script>
+    <script src="src/pouchdb-3.3.0.min.js" type="application/javascript"></script>
+    <script src="js/config" type="application/javascript" ></script>
+    <script src="js/todo.js" type="application/javascript"></script>
+    <!-- CSS -->
+    <link href='src/KelpJSONView.css' rel='stylesheet' type='text/css'/>
+    <link href="css/style.css" rel="stylesheet" type="text/css">
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/png" href="img/favicon.ico"/>
+  </head>
+
+  <body>
+    <div id="online">
+      <div id="status">•</div><div id="online_status">Status</div>
+    </div>
+    <!-- Container for every Content -->
+	   <div id="totalwrapper">
+       <!-- Header -->
+       <div id="wrapper-top">
+         <table><tr>
+           <td><img id="logo" src="img/cloudant.png" width="364" height="115"></td>
+           <td><div id="title"><b>Cloudant Offline ToDo-List</b></div></td></tr>
+          </table>
+        </div>
+
+        <!-- Status Container -->
+        <div id="wrapper-status">
+          <div id="toodle"></div>
+        </div>
+
+        <!-- Tab container -->
+        <div id="wrapper-tabs">
+          <div class="tab" id="default">default</div>
+          <div class="plustab" id="plustab">+</div>
+        </div>
+
+        <!-- Center container -->
+        <div id="wrapper-left">
+          <!-- Enter ToDos -->
+          <div class="title-medium">Manage ToDos:</div>
+          <div style="float:left">
+            <div class="title-medium">Enter Details:</div>
+            <div><input id="todo_input" placeholder="Enter your ToDo" class="todo_input"></div>
+            <div><textarea  id="text_input" placeholder="Enter your Comment" class="text_input"></textarea></div>
+          </div>
+          <div style="float:left;margin-left:20px">
+            <div class="title-medium">Choose a Color:</div>
+            <div>
+              <div class="circle" style="	background-color: #333;" value="black"></div>
+              <div class="circle" style="	background-color: #D40000;" value="red"></div>
+              <div class="circle" style="	background-color: #FF8800;" value="orange"></div>
+              <div class="circle" style="	background-color: #00E02D;" value="green"></div>
+            </div>
+          </div>
+          <div style="clear: both"></div>
+          <!-- See ToDos -->
+          <div class="title-medium">ToDos:</div>
+          <ul id="todo-list"></ul>
+          <div class="title-medium" style="margin-top:10px">Manage Sync:</div>
+          <button type="button" id="syncbtn">Manual Sync</button>
+          <button type="button" id="syncfrombtn">Manual Sync from db</button>
+        </div>
+
+        <!-- Footer -->
+        <div id="wrapper-down">
+          <div id="output">
+            <div class="title-medium" style="margin-top:-30px;">Database Actions:</div>
+            <div id="cloudant-response2" style="margin-bottom:10px;"><p><pre id="output-resp"></pre></p></div>
+            <div class="title-medium">Database Response:</div>
+            <div id="cloudant-response" style="margin-bottom:10px;"><p><pre id="output-data"></pre></p></div>
+            <div class="title-medium">Sync Response:</div>
+            <div id="cloudant-response3"><p><pre id="output-sync"></pre></p></div>
+          </div>
+        </div>
+
+        <div id="floatclear"></div>
+    </div>
+
+    <!-- Preload images from CSS -->
+    <div id="preload">
+     <img src="img/checkmark.png" width="1" height="1" alt="Preload Image 01" />
+     <img src="img/checkbox_off.png" width="1" height="1" alt="Preload Image 02" />
+     <img src="img/checkbox_on.png" width="1" height="1" alt="Preload Image 03" />
+     <img src="img/delete_icon.png" width="1" height="1" alt="Preload Image 04" />
+     <img src="img/delete_hover.png" width="1" height="1" alt="Preload Image 05" />
+     <img src="img/edit_icon.png" width="1" height="1" alt="Preload Image 06" />
+     <img src="img/edit_hover.png" width="1" height="1" alt="Preload Image 07" />
+   </div>
+  </body>
+</html>

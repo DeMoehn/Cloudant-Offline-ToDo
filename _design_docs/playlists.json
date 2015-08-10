@@ -1,0 +1,12 @@
+{
+  "_id": "_design/Playlist",
+  "views": {
+    "getNames": {
+      "map": "function(doc) {\n    if(doc.type == \"playlist\") {\n        emit(doc._id, null);\n    }\n}"
+    },
+    "getConflicts": {
+      "map": "function(doc) { \n    if(doc._conflicts) {\n        emit(doc._id, doc._conflicts);\n    }\n}"
+    }
+  },
+  "language": "javascript"
+}

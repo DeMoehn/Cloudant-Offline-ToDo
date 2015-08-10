@@ -1,0 +1,41 @@
+{
+  "_id": "Coldplay Songs",
+  "type": "playlist",
+  "songs": [
+    {
+      "artist": "Coldplay",
+      "title": "Magic",
+      "position": 0
+    },
+    {
+      "artist": "Coldplay",
+      "title": "Clocks",
+      "position": 1
+    },
+    {
+      "artist": "Coldplay",
+      "title": "A Sky Full of Stars",
+      "position": 2
+    },
+    {
+      "artist": "Coldplay",
+      "title": "Princess of China",
+      "position": 3
+    },
+    {
+      "artist": "Coldplay",
+      "title": "Charlie Brown",
+      "position": 5
+    },
+    {
+      "artist": "Coldplay",
+      "title": "No Guess",
+      "position": 6
+    },
+    {
+      "artist": "Coldplay",
+      "title": "New one",
+      "position": 7
+    }
+  ]
+}

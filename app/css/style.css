@@ -1,0 +1,327 @@
+* {
+	margin: 0;
+}
+
+body {
+	background-color: #666;
+	color: #333333;
+	font-size:13px;
+	font-family: "Helvetica Neue", Gotham, Helvetica, Arial, sans-serif;
+}
+
+#title {
+	height: 104px;
+	margin-left: 70px;
+	color: #FFFFFF;
+	font-family: "Helvetica Neue", Gotham, Helvetica, Arial, sans-serif;
+	font-weight: bold;
+	font-size: 30px;
+	padding-top: 55px;
+}
+
+.title-medium {
+	font-size: 16px;
+	font-weight: bold;
+	margin-bottom: 10px;
+	border-bottom-color: #333333;
+	border-bottom-width: 1px;
+	border-style: none none solid;
+}
+
+#cloudant-response {
+	padding: 5px;
+}
+
+#output {
+	margin-top: 30px;
+}
+
+#show-songs {
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+
+/* Define ToDo List */
+#todo-list li {
+	display: inline-block;
+	width: 100%;
+	padding-bottom: 5px;
+	padding-top: 5px;
+}
+
+#todo-list li:hover {
+	background-color: rgba(0, 213, 255, 0.92);
+}
+
+#todo-list label {
+	font-size:18px;
+}
+
+input[type="checkbox"] {
+	display: none;
+}
+
+input[type="checkbox"]+label {
+	cursor:pointer;
+}
+
+input[type="checkbox"]+label:before {
+	content:"";
+	display:inline-block;
+	height:20px;
+	width:20px;
+	margin:0px 0px 5px -35px;
+	padding-left: 20px;
+	vertical-align: middle;
+	background:url(../img/checkbox_off.png) center no-repeat;
+	background-size: 20px 20px;
+}
+
+input[type="checkbox"]:checked+label:before{
+	background:url(../img/checkbox_on.png) center no-repeat;
+	background-size: 20px 20px;
+}
+
+.destroy {
+	display:inline-block;
+	height:20px;
+	width:20px;
+	background: url(../img/delete_icon.png) center no-repeat;
+	background-size: 20px 20px;
+	border: none;
+	vertical-align: middle;
+	text-align: right;
+	margin:0px 20px 5px 0px;
+	float: right;
+	cursor:pointer;
+}
+
+.destroy:hover {
+	background: url(../img/delete_hover.png) center no-repeat;
+	background-size: 20px 20px;
+}
+
+.edit {
+	display:inline-block;
+	height:20px;
+	width:20px;
+	background: url(../img/edit_icon.png) center no-repeat;
+	background-size: 20px 20px;
+	border: none;
+	vertical-align: middle;
+	text-align: right;
+	margin:0px 20px 5px 0px;
+	float: right;
+	cursor:pointer;
+}
+
+.edit:hover {
+	background: url(../img/edit_hover.png) center no-repeat;
+	background-size: 20px 20px;
+}
+
+/* Define HTML Tags */
+
+input, button, select, option, textarea {
+	color: #333333;
+	font-size:13px;
+	font-family: "Helvetica Neue", Gotham, Helvetica, Arial, sans-serif;
+	margin: 2px;
+}
+
+/* Define Wrappers */
+
+#totalwrapper {
+	background-color: #FFF;
+	width: 950px;
+	display: block;
+	margin-top: 20px;
+	margin-bottom: 20px;
+  	margin-left: auto;
+  	margin-right: auto;
+	padding: 10px;
+}
+
+#wrapper-tabs {
+	width: 930px;
+}
+
+.tab, .plustab{
+	background-color: #0CF;
+	height: 20px;
+  width: 80px;
+	text-align: center;
+	vertical-align: center;
+	font-weight: bold;
+	padding-top: 10px;
+	border-top-right-radius: 10px;
+	border-top-left-radius: 10px;
+	float: left;
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+.plustab {
+	width: 30px;
+}
+
+.defaulttab {
+	background-color: rgba(0, 213, 255, 0.70);
+}
+
+.tab:hover, .plustab:hover {
+	background-color: rgba(0, 213, 255, 0.92);
+	cursor: pointer;
+}
+
+.defaulttab:hover {
+	background-color: rgba(0, 213, 255, 0.70);
+	cursor: default;
+}
+
+#wrapper-top {
+	background-color:#0CF;
+	padding: 5px;
+	margin-bottom: 10px;
+}
+
+#wrapper-status, #toddle {
+	background-color: #390;
+	padding: 5px;
+	margin-bottom: 10px;
+	color: #e9ffd8;
+	font-family: "Helvetica Neue", Gotham, Helvetica, Arial, sans-serif;
+	font-size: 13px;
+	text-align: left;
+}
+
+#wrapper-left {
+	background-color:#0CF;
+	padding: 10px;
+	float: left;
+	width: 930px;
+	min-height: 200px;
+}
+
+#wrapper-down{
+	background-color:#0CF;
+	padding: 10px;
+	float: left;
+	width: 930px;
+	min-height: 200px;
+	margin-top: 10px;
+}
+
+#floatclear {
+	clear: both;
+}
+
+/* jQuery Sortable */
+#sortable { list-style-type: none; margin: 0; padding: 0; width: 60%; }
+#sortable li { margin: 0 3px 3px 3px; padding: 0.4em; padding-left: 1.5em; font-size: 1.4em; height: 18px; }
+#sortable li span { position: absolute; margin-left: -1.3em; }
+
+/* Forms */
+.todo_input {
+	width: 400px;
+	margin-bottom: 10px;
+}
+
+.text_input {
+	width: 400px;
+	height: 60px;
+	margin-bottom: 10px;
+	resize: none;
+}
+
+/* Circles */
+.circle {
+	display: inline-block;
+	border-radius: 50%;
+	width: 25px;
+	height: 25px;
+	border-style: solid;
+  border-width: 1px;
+	border-color: #000;
+}
+
+.circlehover {
+	width: 24px;
+	height: 24px;
+	border-style: solid;
+	border-width: 2px;
+	border-color: #000;
+}
+
+.circleclicked {
+	width: 24px;
+	height: 24px;
+	border-style: solid;
+	border-width: 2px;
+	border-color: #000;
+	background-image: url('../img/checkmark.png');
+	background-size: 20px 20px;
+	background-repeat: no-repeat;
+	background-position: center;
+	content:"";
+}
+
+#cloudant-response {
+    max-height: 300px;
+    overflow: scroll;
+}
+
+#cloudant-response2 {
+		max-height: 200px;
+		overflow: scroll;
+}
+
+#cloudant-response3 {
+		max-height: 220px;
+		overflow: scroll;
+}
+
+/* Trick to force Safari to show Scrollbars */
+::-webkit-scrollbar {
+  -webkit-appearance: none;
+  width: 7px;
+  height: 0px;
+}
+::-webkit-scrollbar-thumb {
+  border-radius: 8px;
+  background-color: rgba(0, 0, 0, .5);
+  -webkit-box-shadow: 0 0 1px rgba(255, 255, 255, .5);
+}
+
+#online {
+	position: fixed;
+	height: 18px;
+	width: 60px;
+	top: 0px;
+	left: 80px;
+	background-color: #b3b3b3;
+	border-bottom-left-radius: 2px;
+  border-bottom-right-radius: 2px;
+	padding: 5px;
+	color: #ffffff;
+}
+
+#status {
+		margin-right: 5px;
+		margin-top: -10px;
+		font-size: 30px;
+		float: left;
+}
+
+#online_status {
+	font-size: 14px;
+	float: left;
+}
+
+#preload {
+	display: none !important;
+	}

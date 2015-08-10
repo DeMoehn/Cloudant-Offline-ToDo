@@ -1,0 +1,42 @@
+#totalwrapper {
+  width: 280px;
+}
+
+#wrapper-status, #toddle {
+  max-width: 270px;
+  overflow: hidden;
+  font-size: 10px;
+}
+
+#wrapper-left {
+  width: 260px;
+}
+
+#wrapper-down{
+  display: none;
+}
+
+#title {
+  display: none;
+}
+
+#logo {
+  width: 260px;
+  height: 74px;
+}
+
+#online {
+  left: 0px;
+}
+
+.todo_input {
+  width: 240px;
+}
+
+.text_input {
+  width: 240px;
+}
+
+.title-medium {
+  font-size: 14px;
+}
