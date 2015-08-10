@@ -4,7 +4,7 @@ $( document ).ready(function() {
 
 // --------------------
 // - General Setup -
-// -------------------
+// --------------------
 
   // - Database Setup (Variables come from config File)-
   var cloudant_url = 'https://' + user + ':' + pass + '@' + username + '.cloudant.com'; // Set the general Cloudant URL

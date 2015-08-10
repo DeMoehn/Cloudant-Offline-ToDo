@@ -1,0 +1,17 @@
+.DS_STORE
+
+# Ignore design_docs
+/_design_docs
+
+# Ignore raw-data
+/raw-data
+
+# Ignore all git and cf Files
+.gitignore
+.cfignore
+
+# Ignore Readme
+README.md
+
+# Ignore .git
+/.git
