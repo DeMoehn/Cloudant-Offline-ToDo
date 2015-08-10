@@ -2,7 +2,7 @@ Cloudant Offline ToDo List
 =================
 
 ##Changes
-- Added PouchDB 3.0
+- Added PouchDB 4.0 & jQuery 2.1.4
 
 ##How to run
 

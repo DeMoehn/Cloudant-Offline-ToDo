@@ -7,19 +7,54 @@ $( document ).ready(function() {
 // --------------------
 
   // - Database Setup (Variables come from config File)-
-  var cloudant_url = 'https://' + user + ':' + pass + '@' + username + '.cloudant.com'; // Set the general Cloudant URL
-  var remoteCouch = cloudant_url + '/' + db; // Set the full path to the "remote Couch" (aka. Cloudant)
+  var cloudant_url = 'https://' + accountname + '.cloudant.com/' + db; // Set the general Cloudant URL
+  var cloudant_auth = btoa(user + ':' + pass); // Creates a Base64 String of the User and Pass
 
   // - Create a new local PouchDB -
-  var db = new PouchDB('todos'), // Create a local CouchDB (aka. PouchDB)
-    remote = remoteCouch, // Give it the remote Couch as a variable
-    opts = { continuous: true }; // Make the replication continous
+  var localDB = new PouchDB('todos');
+  var remoteDB = new PouchDB(cloudant_url, { // Create a local CouchDB (aka. PouchDB) and a remote DB
+    ajax: {
+      cache: false,
+      timeout: 10000,
+      headers: {
+        'Authorization': 'Basic '+ cloudant_auth
+      },
+    },
+  });
 
   // - Listen to Changes Feed -
-  db.info(function(err, info) {
-    db.changes({ since: info.update_seq, live: true }).on('change', changes); // If something changes on the local db, call the changes() Function
-    console.log(err || info);
+  localDB.changes({ // If something changes on the local db, call the changes() Function
+    since: 'now',
+    live: true
+  }).on('change', function (change) {
+    console.log("CHANGES!");
+    changesChanging(change);
+  }).on('error', function (err) {
+    changesError(err);
   });
+
+  // - Receive and print general DB information -
+  localDB.info().then(function (info) {
+    console.log(info);
+  });
+
+  // - Setup the replication/sync -
+  var syncHandler = localDB.sync(remoteDB, {
+      live: true, // Get the newest data live
+      retry: true // Rety if connection was lost
+    }).on('change', function (change) { // If changes occur
+      showStatus('good', 'Changes found');
+    }).on('complete', function (info) { // Is triggered by the cancel() function
+      // replication was canceled!
+    }).on('error', function (err) { // If an unexpected error occurs
+      showStatus('bad', 'Uff! Unexpected error occured!');
+      $.JSONView(info, $('#output-sync'));
+      console.log('ERROR!');
+      console.log(error);
+    });
+
+  // - Debugging -
+  PouchDB.debug.disable(); //PouchDB.debug.enable('*'); // Enable Debugging, Disable via: PouchDB.debug.disable();
 
   // - Keys and Inputs -
   var enterKey = 13; // Code for Enter Key
@@ -27,13 +62,14 @@ $( document ).ready(function() {
   var textInput = $('#text_input').get(0); // Dom Reference for Text input Field
   var syncbtn = $('#syncbtn').get(0); // Dom Reference for Sync button
 
-  // - Global Variables -
-  var messages = [];
-  var onlineStat = false;
-  var colorChecked = '';
+  // - Other Global Variables -
+  var onlineStat = false; // Indicates if the user has network access or not
+  var colorChecked = ''; // Is used to store the color picked
   var currentList = 'default'; // Current list the todos get stored (ID=name+'tab')
-  var allTodos = [];
-  var allLists = [];
+  var allTodos = []; // Is used to store all current todos
+  var allLists = []; // Is used to store all current lists
+  var messages = []; // Is used to store all current messages (errors, etc.)
+  var tabsDefaultHTML = $('#wrapper-tabs').html(); // Save the default and the plustab as standard
 
   // - Styling -
   var myCss = document.createElement('link');
@@ -65,7 +101,7 @@ $( document ).ready(function() {
     }
 
     var todo = {
-      _id: 'todo:'+title,
+      _id: 'todo:'+title+':'+(new Date()).getTime(),
       title: title,
       text: text,
       color: mycolor,
@@ -73,7 +109,7 @@ $( document ).ready(function() {
       list: currentList
     };
 
-    db.put(todo, function callback(err, result) {
+    localDB.put(todo, function callback(err, result) {
       if (!err) {
         console.log('Successfully posted a todo!');
         showStatus('good', 'New ToDo created: '+text);
@@ -85,49 +121,69 @@ $( document ).ready(function() {
     });
   }
 
-  function changes() {
+  function changesChanging(changes) {
     showTodos();
     showLists();
+    console.log("Processing changes");
   }
 
-  // -- Show the ToDos from the database --
+  function changesError(err) {
+    console.log(err);
+  }
+
+  // -- Show the ToDos from the database -- (reworked)
   function showTodos() {
-    db.allDocs({include_docs: true, descending: true}, function(err, doc) {
-      if(!err) {
-        allTodos = doc.rows;
-        redrawTodosUI();
-        showStatus('good', 'Read all todos');
-        $.JSONView(doc, $('#output-data'));
+    localDB.allDocs({ // Get all docs from local PouchDB
+      include_docs: true, // Get the doc contents
+      startkey: 'todo:', // with startkey Todo:
+      endkey: 'todo<' // Ending with "todo<" means just that the ID starts with "Todo:" as "<" is the next symbol
+    }).then(function (result) {
+      allTodos = result.rows; // Get the rows
+      redrawTodosUI(); // Redraw the UI with the new ToDos
+      showStatus('good', 'Read all todos'); // Promt a message
+      $.JSONView(result, $('#output-data'));
+    }).catch(function (err) {
+      showStatus('bad', 'Problem reading all todos'); // Print an error to the UI
+      console.log(err);
+    });
+  }
+
+  // -- Show & Load Lists --
+  function showLists() {
+    var newdocs = Array();
+    localDB.allDocs({include_docs: true, descending: true}, function(err, doc) {
+      doc.rows.forEach(function(entry) {
+        var str = entry.id;
+        var res = str.split(':');
+        if(res[0] == 'list') {
+          newdocs.push(entry);
+        }
+      });
+
+      allLists = newdocs;
+      drawLists(newdocs);
+
+      if (!err) {
+        showStatus('good', 'Read all lists');
       }else{
         showStatus('bad', 'Problem reading all todos');
       }
     });
   }
 
-  // -- Draw ToDos --
+  // -- Draw ToDos -- (reworked)
   function redrawTodosUI() {
-    var todos_sorted = Array();
-    var todos = allTodos;
-
-    todos.forEach(function(entry) {
-      var str = entry.id;
-      var res = str.split(':');
-      if(res[0] == 'todo') {
-        if(entry.doc.list == currentList) {
-          todos_sorted.push(entry);
+    if(allTodos.length === 0) { // If there are no ToDos at all
+      $('#todo-list').empty().append('<li>No ToDos</li>'); // Write it to the list
+      showStatus('good', 'Currently no ToDos'); // Prompt a message
+    }else{ // Otherwise
+      $('#todo-list').empty(); // Delete all contents in the list
+      allTodos.forEach(function(todo) {
+        if(todo.doc.list == currentList ) { // If the ToDo sits in the current List
+          $('#todo-list').append(createTodoListItem(todo.doc)); // Add the todo to the list
         }
-      }
-    });
-
-    if(todos_sorted.length === 0) {
-      $('#todo-list').empty().append('<li>No ToDos</li>');
-    }else{
-      var ul = document.getElementById('todo-list');
-      ul.innerHTML = '';
-      todos_sorted.forEach(function(todo) {
-        ul.appendChild(createTodoListItem(todo.doc));
       });
-      showStatus('good', 'Redrawing UI');
+      showStatus('good', 'Redrawing UI (ToDos)'); // Promt a message
     }
   }
 
@@ -141,10 +197,11 @@ $( document ).ready(function() {
       $(div).insertBefore($('.plustab'));
 
       var list= {
-        _id: 'list:'+name,
+        _id: 'list:'+name+':'+(new Date()).getTime(),
         title: name
       };
-      db.put(list, function callback(err, result) {
+
+      localDB.put(list, function callback(err, result) {
         if (!err) {
           console.log('Successfully created a list!');
           showStatus('good', 'New List created: '+name);
@@ -164,49 +221,24 @@ $( document ).ready(function() {
     }
   }
 
-  // -- Load Lists --
-  function showLists() {
-    var newdocs = Array();
-    db.allDocs({include_docs: true, descending: true}, function(err, doc) {
-      doc.rows.forEach(function(entry) {
-        var str = entry.id;
-        var res = str.split(':');
-        if(res[0] == 'list') {
-          newdocs.push(entry);
-        }
-      });
-
-      allLists = newdocs;
-      drawLists(newdocs);
-
-      if (!err) {
-        showStatus('good', 'Read all todos');
-        $.JSONView(doc, $('#output-data'));
-      }else{
-        showStatus('bad', 'Problem reading all todos');
-      }
-    });
-    showStatus('good', 'Changes detected!');
-  }
-
-  // -- Draw the Lists --
+  // -- Draw the Lists -- (reworked)
   function drawLists() {
     var lists = allLists;
-    $('#wrapper-tabs').html('<div class="tab" id="default">default</div><div class="plustab" id="plustab">+</div>');
-    $('#' + currentList).removeClass('defaulttab');
-    $('#' + currentList).addClass('defaulttab');
+    $('#wrapper-tabs').html(tabsDefaultHTML); // Reset the tabs to the default (empty except default and +)
+    $('#' + currentList).addClass('defaulttab'); // Add the defaulttab class to the currentList
+    clickableDefaultAndPlus(); // Make the Tabs clickable again
 
-    redrawTodosUI();
+    redrawTodosUI(); // Redraw the UI as the ToDos change with a new list
 
-    lists.forEach(function(list) {
-      var div = document.createElement('div');
-      div.id = list.doc.title;
-      div.className = 'tab';
-      div.innerHTML = list.doc.title;
-      $(div).insertBefore($('.plustab'));
+    lists.forEach(function(list) { // For each list
+      var div = document.createElement('div'); // Create a div Element
+      div.id = list.doc.title; // The ID is the title of the list
+      div.className = 'tab'; // The Class is 'tab'
+      div.innerHTML = list.doc.title; // The HTML is also the title of the list
+      $(div).insertBefore($('.plustab')); // Insert the tabs before the last (standard) tab
 
-      $(div).click(function() {
-        tabClicked($(this));
+      $(div).click(function() { // Make the tab clickable
+        tabClicked($(this)); // Call the tabClicked() Function
       });
     });
   }
@@ -214,7 +246,7 @@ $( document ).ready(function() {
   function checkboxChanged(todo, event) {
     console.log('Hi');
     todo.completed = event.target.checked;
-    db.put(todo, function callback(err, result) {
+    localDB.put(todo, function callback(err, result) {
       if (!err) {
         showStatus('good', 'Changed ToDo: '+todo.title);
         $.JSONView(result, $('#output-resp'));
@@ -227,28 +259,20 @@ $( document ).ready(function() {
 
   // User pressed the delete button for a todo, delete it
   function deleteButtonPressed(todo) {
-    db.remove(todo, function callback(err, result) {
+    localDB.remove(todo, function callback(err, result) {
       if (!err) {
         showStatus('good', 'Sucessfully deleted ToDo: '+todo.title);
         $.JSONView(result, $('#output-resp'));
       }else{
         showStatus('bad', 'Problem deleting ToDo: '+todo.title);
       }
-      console.log(err || result);
+      console.log(err || result); // Log error or result to the consule for debugging
    });
   }
 
   // User pressed the delete button for a todo, delete it
   function editButtonPressed(todo) {
-    db.remove(todo, function callback(err, result) {
-      if (!err) {
-        showStatus('good', 'Sucessfully deleted ToDo: '+todo.title);
-        $.JSONView(result, $('#output-resp'));
-      }else{
-        showStatus('bad', 'Problem deleting ToDo: '+todo.title);
-      }
-      console.log(err || result);
-   });
+    alert("Changing is currently not supported");
   }
 
   // The input box when editing a todo has blurred, we should save
@@ -256,72 +280,36 @@ $( document ).ready(function() {
   function todoBlurred(todo, event) {
     var trimmedText = event.target.value.trim();
     if (!trimmedText) {
-      db.remove(todo);
+      localDB.remove(todo);
     } else {
       todo.title = trimmedText;
-      db.put(todo);
+      localDB.put(todo);
     }
   }
 
-  // Initialise a sync with the remote server
+  // Initialise a manual one-way sync with the remote server
   function sync() {
     showStatus('good', 'Syncing...');
-    var opts = {
-        live: true,
-        filter: function(doc) {
-          return doc._id.indexOf('_design') !== 0;
-        }
-    };
-
-    db.replicate.to(remote, opts, syncError)
-        .on('change', function (info) {
-          showStatus('good', 'Sending changes to remote');
-        }).on('uptodate', function (info) {
-          $.JSONView(info, $('#output-sync'));
-          showStatus('good', 'Sync to remote complete. ('+info.docs_read+' read/'+info.docs_written+' written)');
-        }).on('error', function (err) {
-          $.JSONView(info, $('#output-sync'));
-          console.log('ERROR!');
-          console.log(error);
-          showStatus('bad', 'Remote Database not found');
-        });
-
-      db.replicate.from(remote, opts, syncError)
-        .on('change', function (info) {
-          showStatus('good', 'Receiving changes from remote');
-        }).once('uptodate', function (info) {
-          $.JSONView(info, $('#output-sync'));
-          showStatus('good', 'Sync from remote complete. ('+info.docs_read+' read/'+info.docs_written+' written)');
-        }).on('error', function (err) {
-          $.JSONView(info, $('#output-sync'));
-          console.log('ERROR!');
-          console.log(error);
-          showStatus('bad', 'Remote Database not found');
-        });
+    localDB.replicate.to(remoteDB);
+    localDB.replicate.from(remoteDB);
   }
 
+  // Initialise a manual two-way sync with the remote server
   function syncFrom() {
     showStatus('good', 'Syncing from db...');
-    var opts = {
-        live: true,
-        filter: function(doc) {
-          return doc._id.indexOf('_design') !== 0;
-        }
-    };
-
-      db.replicate.from(remote, opts, syncError)
-        .on('change', function (info) {
-          showStatus('good', 'Receiving changes from remote');
-        }).once('uptodate', function (info) {
-          $.JSONView(info, $('#output-sync'));
-          showStatus('good', 'Sync from remote complete. ('+info.docs_read+' read/'+info.docs_written+' written)');
-        }).on('error', function (err) {
-          alert(error);
-          $.JSONView(info, $('#output-sync'));
-          console.log('ERROR!');
-          console.log(error);
-          showStatus('bad', 'Remote Database not found');
-        });
+    localDB.replicate.from(remoteDB
+      ).on('change', function (change) { // If changes occur
+        showStatus('good', 'Changes found');
+        console.log(change);
+      }).on('complete', function (complete) { // If an unexpected error occurs
+        showStatus('good', 'Replication complete!');
+        console.log('Replication Complete!');
+        console.log(complete);
+      }).on('error', function (err) { // If an unexpected error occurs
+        showStatus('bad', 'Uff! Unexpected error occured!');
+        console.log('Replication ERROR!');
+        console.log(error);
+      });
   }
 
   // EDITING STARTS HERE (you dont need to edit anything below this line)
@@ -390,9 +378,7 @@ $( document ).ready(function() {
     }
 
     if ($('#wrapper-status').is(':visible')) { // When the div is visible
-      if(messages.indexOf(text) >= 0) { // Check if message was already published
-        console.log(messages.toString());
-      }else{
+      if(messages.indexOf(text) < 0) { // Check if message was not already published
         $( '#toodle' ).append('</br>'+text); // Just appent the text
         messages.push(text);
       }
@@ -404,83 +390,71 @@ $( document ).ready(function() {
     }
   }
 
-  // Hide Infobox
-  $('#wrapper-status').hide();
-
-  var doc = '{}';
-  $.JSONView(doc, $('#output-data')); // Add the default JSON error data
-  $.JSONView(doc, $('#output-resp')); // Add the default JSON error data
-  $.JSONView(doc, $('#output-sync')); // Add the default JSON error data
-
-  addEventListeners(); // Adds Event Listeners
-  showTodos(); // Reads ToDos
-  showLists(); // Reads Lists
-
-
 // ------------------------------------------
 // - Functions: Button Clicks & Input -
 // ------------------------------------------
 
-// -- Clicked the Tab --
-function tabClicked(tab) {
-  $('#'+currentList).removeClass('defaulttab');
-  currentList = $(tab).attr('id');
-  console.log($(tab).attr('id'));
-  $('#'+currentList).addClass('defaulttab');
+  // -- Clicked the Tab -- (reworked)
+  function tabClicked(tab) {
+    $('#'+currentList).removeClass('defaulttab'); // Remove the defaulttab class from the currentlist
+    currentList = $(tab).attr('id'); // Set the currentlist to the new list
+    $('#'+currentList).addClass('defaulttab'); // Add the defaulttab class to the new (current) list
+    redrawTodosUI(); // Redraw the ToDos, as the list has changed
+  }
 
-  redrawTodosUI();
-}
+  // -- Clicked Sync --
+  function syncPressed(event) {
+    sync();
+  }
 
-// -- Clicked Sync --
-function syncPressed(event) {
-  sync();
-}
-
-// -- Entered New ToDo --
-function newTodoKeyPressHandler( event ) { // Handles the Enter Key Press
-  if (event.keyCode === enterKey) {
-    addTodo(todoInput.value, textInput.value);
-    todoInput.value = '';
-    textInput.value = '';
-    if(colorChecked !== '') {
-      colorChecked.removeClass( 'circleclicked' );
-      colorChecked = '';
+  // -- Entered New ToDo --
+  function newTodoKeyPressHandler( event ) { // Handles the Enter Key Press
+    if (event.keyCode === enterKey) {
+      addTodo(todoInput.value, textInput.value);
+      todoInput.value = '';
+      textInput.value = '';
+      if(colorChecked !== '') {
+        colorChecked.removeClass( 'circleclicked' );
+        colorChecked = '';
+      }
     }
   }
-}
 
-function todoKeyPressed(todo, event) {
-  if (event.keyCode === enterKey) {
-    var inputEditTodo = document.getElementById('input_' + todo._id);
-    inputEditTodo.blur();
+  function todoKeyPressed(todo, event) {
+    if (event.keyCode === enterKey) {
+      var inputEditTodo = document.getElementById('input_' + todo._id);
+      inputEditTodo.blur();
+    }
   }
-}
-
-// -----------------------------
-// - Button Clicks & Input -
-// -----------------------------
-
-  // -- Click: Plustab (for new Tab) --
-  $('#plustab').click(function() {
-    var name = prompt('Enter list name (max. 8 char)','listname');
-
-    addList(name);
-  });
-
-  // --Click: tab (for changing List) --
-  $('#defaut').click(function() {
-    tabClicked($(this));
-  });
 
 
-  // -- Hover: Circle (for adding color) --
+  // -----------------------------
+  // - Button Clicks & Input -
+  // -----------------------------
+
+  function clickableDefaultAndPlus() { // Function needed, as they are dynamically deleted and recreated when the List changes
+    // -- Click: Plustab (for new Tab) -- (reworked)
+    $('#plustab').on('click', function() {
+      var name = prompt('Enter list name (max. 8 char)','listname'); // Do a promt to enter a new list
+      if (name !== '') { // Was someting entered?
+        addList(name); // Add the list
+      }
+    });
+
+    // --Click: tab (for changing List) -- (reworked)
+    $('#default').on('click', function() {
+      tabClicked($(this));
+    });
+  }
+
+  // -- Hover: Circle (for adding color) -- (reworked)
   $('.circle').hover(function() {
     $( this ).addClass( 'circlehover' );
   }, function() {
     $( this ).removeClass( 'circlehover' );
   });
 
-  // -- Click: Circle (for adding color) --
+  // -- Click: Circle (for adding color) -- (reworked)
   $('.circle').click(function() {
     if(colorChecked === '') {
       $( this ).addClass( 'circleclicked' );
@@ -492,6 +466,7 @@ function todoKeyPressed(todo, event) {
     }
   });
 
+  // -- Click: Sync From Button -- (reworked)
   $('#syncfrombtn').click(function() {
     syncFrom();
   });
@@ -501,13 +476,13 @@ function todoKeyPressed(todo, event) {
   // - Intervals & Event Listeners -
   // -----------------------------------
 
+  // -- Adds several Event Listeners --
   function addEventListeners() {
     todoInput.addEventListener('keypress', newTodoKeyPressHandler, false);  // Adds Event Listener for ToDo Input
     syncbtn.addEventListener('click', syncPressed, false);
   }
 
   // -- Check online Status --
-  setInterval(checkOnline, 1000);
   function checkOnline() {
     var online = navigator.onLine;
     if(online) {
@@ -515,9 +490,6 @@ function todoKeyPressed(todo, event) {
       $('#status').css('color', '#390');
       if(!onlineStat) {
         onlineStat = true;
-        if (remoteCouch) { // Syncs if remote Couch is available
-          sync();
-        }
       }
     }else{
       $('#online_status').html('Offline');
@@ -526,4 +498,21 @@ function todoKeyPressed(todo, event) {
     }
   }
 
+  // ------------------------
+  // - General first calls -
+  // ------------------------
+
+  $('#wrapper-status').hide();   // Hide the Infobox at startup
+
+  var doc = '{}';
+  $.JSONView(doc, $('#output-data')); // Add the default JSON error data
+  $.JSONView(doc, $('#output-resp')); // Add the default JSON error data
+  $.JSONView(doc, $('#output-sync')); // Add the default JSON error data
+
+  addEventListeners(); // Adds Event Listeners
+  showTodos(); // Reads ToDos
+  showLists(); // Reads Lists
+
+  setInterval(checkOnline, 1000);
+  clickableDefaultAndPlus();
 });
