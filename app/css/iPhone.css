@@ -29,6 +29,30 @@
   left: 0px;
 }
 
+#todo-list label {
+	font-size:12px;
+}
+
+.destroy {
+	display:inline-block;
+	height:15px;
+	width:15px;
+  background-size: 15px 15px;
+}
+
+.edit {
+	display:inline-block;
+	height:15px;
+	width:15px;
+  background-size: 15px 15px;
+}
+
+input[type="checkbox"]+label:before, input[type="checkbox"]:checked+label:before {
+  height:15px;
+  width:15px;
+  background-size: 15px 15px;
+}
+
 .todo_input {
   width: 240px;
 }

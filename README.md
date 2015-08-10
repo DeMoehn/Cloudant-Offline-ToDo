@@ -1,6 +1,9 @@
 Cloudant Offline ToDo List
 =================
 
+##Live action?
+- Demo available via: http://cloudant-offline-todo.mybluemix.net
+
 ##Changes
 - Added PouchDB 4.0 & jQuery 2.1.4
 
@@ -46,7 +49,7 @@ Cloudant Offline ToDo List
 
 * Change to the app directory and push the inital application via (Change APPN-AME!):
 ```
-      $ ccf push APP-NAME -m 64M -b https://github.com/cloudfoundry/staticfile-buildpack.git -s cflinuxfs
+      $ cf push APP-NAME -m 64M -b https://github.com/cloudfoundry/staticfile-buildpack.git -s cflinuxfs
 ```
 
 * To add Git-Integration go to: https://hub.jazz.net/ and either login or create an account
