@@ -50,29 +50,43 @@
 
         <!-- Center container -->
         <div id="wrapper-left">
-          <!-- Enter ToDos -->
-          <div class="title-medium">Manage ToDos:</div>
-          <div style="float:left">
-            <div class="title-medium">Enter Details:</div>
-            <div><input id="todo_input" placeholder="Enter your ToDo" class="todo_input"></div>
-            <div><textarea  id="text_input" placeholder="Enter your Comment" class="text_input"></textarea></div>
-          </div>
-          <div style="float:left;margin-left:20px">
-            <div class="title-medium">Choose a Color:</div>
-            <div>
-              <div class="circle" style="	background-color: #333;" value="black"></div>
-              <div class="circle" style="	background-color: #D40000;" value="red"></div>
-              <div class="circle" style="	background-color: #FF8800;" value="orange"></div>
-              <div class="circle" style="	background-color: #00E02D;" value="green"></div>
-            </div>
-          </div>
-          <div style="clear: both"></div>
+
           <!-- See ToDos -->
           <div class="title-medium">ToDos:</div>
-          <ul id="todo-list"></ul>
+          <div class="title-content">
+            <ul class="todo-list"></ul>
+          </div>
+
+          <!-- Enter ToDos -->
+          <div class="title-medium">Manage ToDos:</div>
+          <div class="title-content">
+            <div style="float:left">
+              <div class="title-medium" id="enterdetails">Enter Details:</div>
+              <div><input id="todo_input" placeholder="Enter your ToDo" class="todo_input input"></div>
+              <div><textarea  id="text_input" placeholder="Enter your Comment" class="text_input input"></textarea></div>
+            </div>
+            <div style="float:left;margin-left:20px">
+              <div class="title-medium">Choose a Color:</div>
+              <div class="color_circles">
+                <div class="circle black" value="black"></div>
+                <div class="circle red" value="red"></div>
+                <div class="circle orange" value="orange"></div>
+                <div class="circle green" value="green"></div>
+              </div>
+            </div>
+            <div style="clear: both"></div>
+            <div>
+              <button type="button" id="sendtodo" class="btn" value="save">Save ToDo</button>
+              <button type="button" id="canceltodo" class="btn">Cancel Editing</button>
+            </div>
+          </div>
+
+          <!-- Manage Sync -->
           <div class="title-medium" style="margin-top:10px">Manage Sync:</div>
-          <button type="button" id="syncbtn">Manual Sync</button>
-          <button type="button" id="syncfrombtn">Manual Sync from db</button>
+          <div class="title-content">
+            <button type="button" id="syncbtn" class="btn">Manual Sync</button>
+            <button type="button" id="syncfrombtn" class="btn">Manual Sync from db</button>
+          </div>
         </div>
 
         <!-- Footer -->
