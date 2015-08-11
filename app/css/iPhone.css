@@ -21,36 +21,27 @@
 }
 
 #logo {
-  width: 260px;
-  height: 74px;
+  width: 182px;
+  height: 57px;
+}
+
+#sendtodo {
+  margin-top: 15px;
+  margin-left: 15px;
 }
 
 #online {
   left: 0px;
 }
 
-#todo-list label {
+.todo-list label {
 	font-size:12px;
+  font-weight: bold;
 }
 
-.destroy {
-	display:inline-block;
-	height:15px;
-	width:15px;
-  background-size: 15px 15px;
-}
-
-.edit {
-	display:inline-block;
-	height:15px;
-	width:15px;
-  background-size: 15px 15px;
-}
-
-input[type="checkbox"]+label:before, input[type="checkbox"]:checked+label:before {
-  height:15px;
-  width:15px;
-  background-size: 15px 15px;
+.todo-list .todo_text {
+	font-size:10px;
+  margin-left: 25px;
 }
 
 .todo_input {
@@ -62,5 +53,39 @@ input[type="checkbox"]+label:before, input[type="checkbox"]:checked+label:before
 }
 
 .title-medium {
-  font-size: 14px;
+  font-size: 12px;
+}
+/* ToDos UI */
+
+.destroy {
+	display:inline-block;
+	height:15px;
+	width:15px;
+  background-size: 15px 15px;
+  left: 190px;
+}
+
+.edit {
+	display:inline-block;
+	height:15px;
+	width:15px;
+  background-size: 15px 15px;
+  left: 190px;
+}
+
+.destroy:hover, .edit:hover {
+  height:15px;
+	width:15px;
+  background-size: 15px 15px;
+}
+
+.todo-list input[type="checkbox"]+label:before {
+	height:15px;
+	width:15px;
+	padding-left: 10px;
+	background-size: 15px 15px;
+}
+
+.todo-list input[type="checkbox"]:checked+label:before{
+	background-size: 15px 15px;
 }

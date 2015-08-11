@@ -89,11 +89,6 @@ body {
 	margin-top: 30px;
 }
 
-#show-songs {
-	margin-top: 5px;
-	margin-bottom: 5px;
-}
-
 /* Define HTML Tags */
 
 input, button, select, option, textarea {
@@ -160,7 +155,7 @@ input, button, select, option, textarea {
 /* List Tabs */
 
 .tab, .plustab{
-	background-color: #0CF;
+	background-color: rgba(0, 213, 255, 0.70);
 	height: 20px;
   width: 80px;
 	text-align: center;
@@ -183,7 +178,7 @@ input, button, select, option, textarea {
 }
 
 .defaulttab {
-	background-color: rgba(0, 213, 255, 0.70);
+	background-color: #0CF;
 }
 
 .tab:hover, .plustab:hover {
@@ -192,7 +187,7 @@ input, button, select, option, textarea {
 }
 
 .defaulttab:hover {
-	background-color: rgba(0, 213, 255, 0.70);
+	background-color: #0CF;
 	cursor: default;
 }
 

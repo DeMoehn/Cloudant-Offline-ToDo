@@ -39,7 +39,7 @@ Cloudant Offline ToDo List
 ```
       $ ./deploy
 ```
-* Visit http://local.dev:8000/crud.html
+* Visit http://local.dev:8000
 
 ##Deploy on IBM Bluemix
 * Login to IBM Bluemix via the CF Command Line Tool
