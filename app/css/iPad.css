@@ -17,9 +17,17 @@
 }
 
 .todo_input {
-  width: 688px;
+  width: 400px;
 }
 
 #online {
   left: 0px;
+}
+
+.destroy {
+  left: 600px;
+}
+
+.edit {
+  left: 620px;
 }
