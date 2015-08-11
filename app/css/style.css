@@ -9,6 +9,52 @@ body {
 	font-family: "Helvetica Neue", Gotham, Helvetica, Arial, sans-serif;
 }
 
+/* Styles */
+
+.btn {
+	background: #FFF;
+	border-style: solid;
+	border-width: 1px;
+	border-color: #000;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  font-family: "Helvetica Neue", Gotham, Helvetica, Arial, sans-serif;
+  font-size: 12px;
+  padding: 5px 15px 5px 15px;
+  text-decoration: none;
+}
+
+.btn:hover {
+  border-color: #0CF;
+  text-decoration: none;
+}
+
+.input {
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+	font-family: "Helvetica Neue", Gotham, Helvetica, Arial, sans-serif;
+	padding: 2px;
+	border-style: solid;
+	border-width: 1px;
+	border-color: #000;
+}
+
+.input:hover {
+	border-color: #0CF;
+}
+
+.input:focus {
+	border-color: #0CF;
+}
+
+.inputproblem {
+	border-color: #FF1E00;
+}
+
+/* Titles */
+
 #title {
 	height: 104px;
 	margin-left: 70px;
@@ -23,9 +69,16 @@ body {
 	font-size: 16px;
 	font-weight: bold;
 	margin-bottom: 10px;
+	margin-top: 15px;
 	border-bottom-color: #333333;
 	border-bottom-width: 1px;
 	border-style: none none solid;
+}
+
+.title-content {
+	padding: 5px 5px 5px 5px;
+	background-color: #00B3E6;
+	border-radius: 5px;
 }
 
 #cloudant-response {
@@ -39,85 +92,6 @@ body {
 #show-songs {
 	margin-top: 5px;
 	margin-bottom: 5px;
-}
-
-/* Define ToDo List */
-#todo-list li {
-	display: inline-block;
-	width: 100%;
-	padding-bottom: 5px;
-	padding-top: 5px;
-}
-
-#todo-list li:hover {
-	background-color: rgba(0, 213, 255, 0.92);
-}
-
-#todo-list label {
-	font-size:18px;
-}
-
-input[type="checkbox"] {
-	display: none;
-}
-
-input[type="checkbox"]+label {
-	cursor:pointer;
-}
-
-input[type="checkbox"]+label:before {
-	content:"";
-	display:inline-block;
-	height:20px;
-	width:20px;
-	margin:0px 0px 5px -35px;
-	padding-left: 20px;
-	vertical-align: middle;
-	background:url(../img/checkbox_off.png) center no-repeat;
-	background-size: 20px 20px;
-}
-
-input[type="checkbox"]:checked+label:before{
-	background:url(../img/checkbox_on.png) center no-repeat;
-	background-size: 20px 20px;
-}
-
-.destroy {
-	display:inline-block;
-	height:20px;
-	width:20px;
-	background: url(../img/delete_icon.png) center no-repeat;
-	background-size: 20px 20px;
-	border: none;
-	vertical-align: middle;
-	text-align: right;
-	margin:0px 20px 5px 0px;
-	float: right;
-	cursor:pointer;
-}
-
-.destroy:hover {
-	background: url(../img/delete_hover.png) center no-repeat;
-	background-size: 20px 20px;
-}
-
-.edit {
-	display:inline-block;
-	height:20px;
-	width:20px;
-	background: url(../img/edit_icon.png) center no-repeat;
-	background-size: 20px 20px;
-	border: none;
-	vertical-align: middle;
-	text-align: right;
-	margin:0px 20px 5px 0px;
-	float: right;
-	cursor:pointer;
-}
-
-.edit:hover {
-	background: url(../img/edit_hover.png) center no-repeat;
-	background-size: 20px 20px;
 }
 
 /* Define HTML Tags */
@@ -144,43 +118,6 @@ input, button, select, option, textarea {
 
 #wrapper-tabs {
 	width: 930px;
-}
-
-.tab, .plustab{
-	background-color: #0CF;
-	height: 20px;
-  width: 80px;
-	text-align: center;
-	vertical-align: center;
-	font-weight: bold;
-	padding-top: 10px;
-	border-top-right-radius: 10px;
-	border-top-left-radius: 10px;
-	float: left;
-	-webkit-touch-callout: none;
-	-webkit-user-select: none;
-	-khtml-user-select: none;
-	-moz-user-select: none;
-	-ms-user-select: none;
-	user-select: none;
-}
-
-.plustab {
-	width: 30px;
-}
-
-.defaulttab {
-	background-color: rgba(0, 213, 255, 0.70);
-}
-
-.tab:hover, .plustab:hover {
-	background-color: rgba(0, 213, 255, 0.92);
-	cursor: pointer;
-}
-
-.defaulttab:hover {
-	background-color: rgba(0, 213, 255, 0.70);
-	cursor: default;
 }
 
 #wrapper-top {
@@ -220,6 +157,45 @@ input, button, select, option, textarea {
 	clear: both;
 }
 
+/* List Tabs */
+
+.tab, .plustab{
+	background-color: #0CF;
+	height: 20px;
+  width: 80px;
+	text-align: center;
+	vertical-align: center;
+	font-weight: bold;
+	padding-top: 10px;
+	border-top-right-radius: 10px;
+	border-top-left-radius: 10px;
+	float: left;
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+.plustab {
+	width: 30px;
+}
+
+.defaulttab {
+	background-color: rgba(0, 213, 255, 0.70);
+}
+
+.tab:hover, .plustab:hover {
+	background-color: rgba(0, 213, 255, 0.92);
+	cursor: pointer;
+}
+
+.defaulttab:hover {
+	background-color: rgba(0, 213, 255, 0.70);
+	cursor: default;
+}
+
 /* jQuery Sortable */
 #sortable { list-style-type: none; margin: 0; padding: 0; width: 60%; }
 #sortable li { margin: 0 3px 3px 3px; padding: 0.4em; padding-left: 1.5em; font-size: 1.4em; height: 18px; }
@@ -239,7 +215,7 @@ input, button, select, option, textarea {
 }
 
 /* Circles */
-.circle {
+.circle, .colorDiv {
 	display: inline-block;
 	border-radius: 50%;
 	width: 25px;
@@ -249,11 +225,20 @@ input, button, select, option, textarea {
 	border-color: #000;
 }
 
+.colorDiv {
+	display: inline-block;
+	width: 15px;
+	height: 15px;
+	vertical-align: middle;
+	line-height: normal;
+	margin-left: 15px;
+}
+
 .circlehover {
-	width: 24px;
-	height: 24px;
+	width: 21px;
+	height: 21px;
 	border-style: solid;
-	border-width: 2px;
+	border-width: 3px;
 	border-color: #000;
 }
 
@@ -269,6 +254,128 @@ input, button, select, option, textarea {
 	background-position: center;
 	content:"";
 }
+
+.black {
+	background-color: #333;
+}
+
+.red {
+	background-color: #FF1E00;
+}
+
+.orange {
+		background-color: #FFB100;
+}
+
+.green {
+		background-color: #00FF43;
+}
+
+/* Define ToDo List */
+
+.todo-list li{
+	display: inline-block;
+	width: 100%;
+	min-height: 25px;
+	line-height: 30px;
+	margin-left: -35px;
+	padding-top: 5px;
+	padding-right: 20px;
+	padding-left: 10px;
+}
+
+.todo-list li:not(:last-child) {
+		margin-bottom: 10px;
+}
+
+.todo-list li:hover {
+	background-color: #0CF;
+	border-radius: 5px;
+}
+
+.todo-list .view {
+	line-height: 30px;
+	min-height: 30px;
+	vertical-align: middle;
+	line-height: normal;
+}
+
+.todo-list .todo_text {
+	margin-left: 40px;
+}
+
+.todo-list label {
+	font-size: 16px;
+	vertical-align: middle;
+	line-height: normal;
+}
+
+.todo-list input[type="checkbox"] {
+	display: none;
+}
+
+.todo-list input[type="checkbox"]+label {
+	cursor:pointer;
+}
+
+.todo-list input[type="checkbox"]+label:before {
+	content:"";
+	display:inline-block;
+	height:20px;
+	width:20px;
+	padding-left: 20px;
+	background:url(../img/checkbox_off.png) center no-repeat;
+	background-size: 20px 20px;
+	vertical-align: middle;
+	line-height: normal;
+}
+
+.todo-list input[type="checkbox"]:checked+label:before{
+	background:url(../img/checkbox_on.png) center no-repeat;
+	background-size: 20px 20px;
+	vertical-align: middle;
+	line-height: normal;
+}
+
+.destroy {
+	display:inline-block;
+	height:18px;
+	width:18px;
+	background: url(../img/delete_icon.png) center no-repeat;
+	background-size: 18px 18px;
+	border: none;
+	cursor:pointer;
+
+	position: relative;
+	top: -35px;
+	left: 850px;
+}
+
+.destroy:hover {
+	background: url(../img/delete_hover.png) center no-repeat;
+	background-size: 18px 18px;
+}
+
+.edit {
+	display:inline-block;
+	height:18px;
+	width:18px;
+	background: url(../img/edit_icon.png) center no-repeat;
+	background-size: 18px 18px;
+	border: none;
+	cursor:pointer;
+
+	position: relative;
+	top: -35px;
+	left: 800px;
+}
+
+.edit:hover {
+	background: url(../img/edit_hover.png) center no-repeat;
+	background-size: 18px 18px;
+}
+
+/* JSON Responses */
 
 #cloudant-response {
     max-height: 300px;

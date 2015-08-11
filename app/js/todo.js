@@ -67,6 +67,7 @@ $( document ).ready(function() {
   var colorChecked = ''; // Is used to store the color picked
   var currentList = 'default'; // Current list the todos get stored (ID=name+'tab')
   var allTodos = []; // Is used to store all current todos
+  var currentTodo = ''; // Is used to store the current todo when editing
   var allLists = []; // Is used to store all current lists
   var messages = []; // Is used to store all current messages (errors, etc.)
   var tabsDefaultHTML = $('#wrapper-tabs').html(); // Save the default and the plustab as standard
@@ -92,33 +93,64 @@ $( document ).ready(function() {
 // ---------------
 
   // -- Add a ToDo to the database --
-  function addTodo(title, text) {
-    var mycolor = '';
-    if(colorChecked === '') {
-      mycolor = 'black';
+  function addTodo(title, text, colorCk) {
+    console.log($('#sendtodo').attr('value'));
+    // Show problems
+    if(title.value == '') {
+      $('#'+title.id).addClass('inputproblem');
     }else{
-      mycolor = colorChecked.attr('value');
+      $('#'+title.id).removeClass('inputproblem');
+    }
+    if(text.value == '') {
+      $('#'+text.id).addClass('inputproblem');
+    }else{
+      $('#'+text.id).removeClass('inputproblem');
     }
 
-    var todo = {
-      _id: 'todo:'+title+':'+(new Date()).getTime(),
-      title: title,
-      text: text,
-      color: mycolor,
-      completed: false,
-      list: currentList
-    };
-
-    localDB.put(todo, function callback(err, result) {
-      if (!err) {
-        console.log('Successfully posted a todo!');
-        showStatus('good', 'New ToDo created: '+text);
-        $.JSONView(result, $('#output-resp'));
+    // Do some stuff if nothing is empty
+    if(title.value !== '' && text.value !== '') {
+      var mycolor = '';
+      if(colorChecked === '') {
+        mycolor = 'black'; // Choose a default color if no color was checked
       }else{
-        showStatus('bad', 'Problem creating ToDo: '+text);
+        mycolor = colorChecked.attr('value');
+        colorChecked.removeClass( 'circleclicked' ); // DOM Cleanup
+        colorChecked = ''; // DOM Cleanup
       }
-      console.log(err || result);
-    });
+
+      // Create JSON
+      var todo = {
+        _id: 'todo:'+title.value+':'+(new Date()).getTime(),
+        title: title.value,
+        text: text.value,
+        color: mycolor,
+        completed: false,
+        list: currentList
+      };
+
+      if($('#sendtodo').attr('value') == 'edit') {
+        console.log('SAVING in EDITMODE!')
+        todo._id = currentTodo._id;
+        todo._rev = currentTodo._rev;
+        console.log(todo);
+      }
+
+      // Save to the DB
+      localDB.put(todo, function callback(err, result) {
+        if (!err) {
+          console.log('Successfully posted a todo!');
+          showStatus('good', 'New ToDo created: '+title.value);
+          $.JSONView(result, $('#output-resp'));
+        }else{
+          showStatus('bad', 'Problem creating ToDo: '+title.value);
+        }
+        console.log(err || result);
+      });
+
+      // DOM Cleanup
+      $('#canceltodo').click();
+      $('#enterdetails').html('Enter Details:'); // This may be set to 'Enter Details: (Editing)' if in Editing mode, so reset
+    }
   }
 
   function changesChanging(changes) {
@@ -174,13 +206,13 @@ $( document ).ready(function() {
   // -- Draw ToDos -- (reworked)
   function redrawTodosUI() {
     if(allTodos.length === 0) { // If there are no ToDos at all
-      $('#todo-list').empty().append('<li>No ToDos</li>'); // Write it to the list
+      $('.todo-list').empty().append('<li>No ToDos</li>'); // Write it to the list
       showStatus('good', 'Currently no ToDos'); // Prompt a message
     }else{ // Otherwise
-      $('#todo-list').empty(); // Delete all contents in the list
+      $('.todo-list').empty(); // Delete all contents in the list
       allTodos.forEach(function(todo) {
         if(todo.doc.list == currentList ) { // If the ToDo sits in the current List
-          $('#todo-list').append(createTodoListItem(todo.doc)); // Add the todo to the list
+          $('.todo-list').append(createTodoListItem(todo.doc)); // Add the todo to the list
         }
       });
       showStatus('good', 'Redrawing UI (ToDos)'); // Promt a message
@@ -244,7 +276,6 @@ $( document ).ready(function() {
   }
 
   function checkboxChanged(todo, event) {
-    console.log('Hi');
     todo.completed = event.target.checked;
     localDB.put(todo, function callback(err, result) {
       if (!err) {
@@ -272,7 +303,20 @@ $( document ).ready(function() {
 
   // User pressed the delete button for a todo, delete it
   function editButtonPressed(todo) {
-    alert("Changing is currently not supported");
+    $('#todo_input').val(todo.title);
+    $('#text_input').val(todo.text);
+    $('#enterdetails').html('Enter Details: (Edit: '+todo.title+')'); // Add a hint that we are now editing
+    $('#sendtodo').val('edit'); // Change the Save button from save-mode to edit-mode
+    $('#canceltodo').show(); // Show the cancel button
+    currentTodo = todo;
+
+    if(colorChecked !== '') {
+      colorChecked.removeClass( 'circleclicked' );
+    }
+    colorChecked = $('.circle.'+todo.color);
+    $('.circle.'+todo.color).addClass( 'circleclicked' );
+
+    console.log(todo);
   }
 
   // The input box when editing a todo has blurred, we should save
@@ -337,9 +381,16 @@ $( document ).ready(function() {
     checkbox.type = 'checkbox';
     checkbox.addEventListener('change', checkboxChanged.bind(this, todo));
 
+    var colorDiv = document.createElement('div');
+    colorDiv.className = 'colorDiv '+todo.color;
+
     var label = document.createElement('label');
     label.setAttribute('for', checkbox.id);
     label.appendChild(document.createTextNode(todo.title));
+
+    var text = document.createElement('div');
+    text.className = "todo_text";
+    text.appendChild(document.createTextNode((todo.text !== '') ? todo.text : 'No comment'));
 
     var deleteLink = document.createElement('button');
     deleteLink.className = 'destroy';
@@ -353,6 +404,8 @@ $( document ).ready(function() {
     divDisplay.className = 'view';
     divDisplay.appendChild(checkbox);
     divDisplay.appendChild(label);
+    divDisplay.appendChild(colorDiv);
+    divDisplay.appendChild(text);
 
     divDisplay.appendChild(deleteLink);
     divDisplay.appendChild(editLink);
@@ -410,13 +463,7 @@ $( document ).ready(function() {
   // -- Entered New ToDo --
   function newTodoKeyPressHandler( event ) { // Handles the Enter Key Press
     if (event.keyCode === enterKey) {
-      addTodo(todoInput.value, textInput.value);
-      todoInput.value = '';
-      textInput.value = '';
-      if(colorChecked !== '') {
-        colorChecked.removeClass( 'circleclicked' );
-        colorChecked = '';
-      }
+      addTodo(todoInput, textInput, colorChecked);
     }
   }
 
@@ -446,6 +493,25 @@ $( document ).ready(function() {
       tabClicked($(this));
     });
   }
+
+  // -- Click: Save ToDo --
+  $('#sendtodo').click(function() {
+      addTodo(todoInput, textInput, colorChecked);
+  });
+
+  // -- Click: Cancel ToDo Edit --
+  $('#canceltodo').click(function() {
+    $('#todo_input').val(''); // Reset the Title Input
+    $('#text_input').val(''); // Reset the Text Input
+    $('#enterdetails').html('Enter Details:'); // Reset the Heading
+    $('#sendtodo').val('save'); // Reset the save button to save-mode
+    currentTodo = ''; // Reset current todo (as we have none anymore)
+    if(colorChecked != '') {
+      colorChecked.removeClass( 'circleclicked' ); // Remove the circle clicked
+      colorChecked = ''; // Reset the circle clicked variabl
+    }
+    $('#canceltodo').hide(); // Hide the cancel button again
+  });
 
   // -- Hover: Circle (for adding color) -- (reworked)
   $('.circle').hover(function() {
@@ -503,6 +569,7 @@ $( document ).ready(function() {
   // ------------------------
 
   $('#wrapper-status').hide();   // Hide the Infobox at startup
+  $('#canceltodo').hide(); // Hide the cancel edit button
 
   var doc = '{}';
   $.JSONView(doc, $('#output-data')); // Add the default JSON error data
