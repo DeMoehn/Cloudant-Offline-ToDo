@@ -49,7 +49,7 @@ Cloudant Offline ToDo List
 
 * Change to the app directory and push the inital application via (Change APPN-AME!):
 ```
-      $ cf push APP-NAME -m 64M -b https://github.com/cloudfoundry/staticfile-buildpack.git -s cflinuxfs
+      $ cf push APP-NAME -m 64M -b https://github.com/cloudfoundry/staticfile-buildpack.git -s cflinuxfs2
 ```
 
 * To add Git-Integration go to: https://hub.jazz.net/ and either login or create an account
