@@ -1,3 +1,5 @@
+/* Overall */
+
 * {
 	margin: 0;
 }
@@ -9,7 +11,7 @@ body {
 	font-family: "Helvetica Neue", Gotham, Helvetica, Arial, sans-serif;
 }
 
-/* Styles */
+/* Input Styles */
 
 .btn {
 	background: #FFF;
@@ -192,6 +194,7 @@ input, button, select, option, textarea {
 }
 
 /* Forms */
+
 .todo_input {
 	width: 400px;
 	margin-bottom: 10px;
@@ -205,6 +208,7 @@ input, button, select, option, textarea {
 }
 
 /* Circles */
+
 .circle, .colorDiv {
 	display: inline-block;
 	border-radius: 50%;
@@ -384,6 +388,7 @@ input, button, select, option, textarea {
 }
 
 /* Trick to force Safari to show Scrollbars */
+
 ::-webkit-scrollbar {
   -webkit-appearance: none;
   width: 7px;
@@ -394,6 +399,8 @@ input, button, select, option, textarea {
   background-color: rgba(0, 0, 0, .5);
   -webkit-box-shadow: 0 0 1px rgba(255, 255, 255, .5);
 }
+
+/* Online indicator */
 
 #online {
 	position: fixed;
@@ -407,6 +414,8 @@ input, button, select, option, textarea {
 	padding: 5px;
 	color: #ffffff;
 }
+
+/* Status bar and Preloader */
 
 #status {
 		margin-right: 5px;

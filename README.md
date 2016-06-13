@@ -4,6 +4,14 @@ Cloudant Offline ToDo List
 ##Live action?
 Demo available via: http://cloudant-offline-todo.mybluemix.net
 
+##Description
+A simple and quick hacked **offline-first** ToDo-List application.
+The app is built using **HTML5** and **Javascript** including the OpenSource "**PouchDB**" to store JSON data in the browser.
+
+PouchDB is able to replicate/sync data with **IBM Cloudant** (DBaaS) to create a simple, multi-device, cloud based ToDo-List.
+
+The app is just quickly hacked to demonstrate Cloudant/CouchDB replication, no awareness given to optimized or good coding! It's developed to be displayed on Safari, iPad and iPhone, but no work was done to make it a real responsive Web app.
+
 ##Screenshots
 <img src="https://raw.githubusercontent.com/DeMoehn/Cloudant-Offline-ToDo/master/github-data/preview_desktop.png" width="500"/>
 

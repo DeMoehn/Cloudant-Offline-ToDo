@@ -1,3 +1,5 @@
+/* Change Wrappers */
+
 #totalwrapper {
   width: 728px;
 }
@@ -15,6 +17,8 @@
 #wrapper-down{
   width: 708px;
 }
+
+/* Edit ToDo UI */
 
 .todo_input {
   width: 400px;

@@ -1,3 +1,5 @@
+/* Change Wrappers */
+
 #totalwrapper {
   width: 280px;
 }
@@ -16,6 +18,8 @@
   display: none;
 }
 
+/* Change Title & Logo */
+
 #title {
   display: none;
 }
@@ -33,6 +37,8 @@
 #online {
   left: 0px;
 }
+
+/* ToDo List changes */
 
 .todo-list label {
 	font-size:12px;
@@ -55,6 +61,7 @@
 .title-medium {
   font-size: 12px;
 }
+
 /* ToDos UI */
 
 .destroy {
