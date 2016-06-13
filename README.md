@@ -5,9 +5,9 @@ Cloudant Offline ToDo List
 Demo available via: http://cloudant-offline-todo.mybluemix.net
 
 ##Screenshots
-![Desktop Preview](https://raw.githubusercontent.com/DeMoehn/Cloudant-Offline-ToDo/master/github-data/preview_desktop.png)
+<img src="https://raw.githubusercontent.com/DeMoehn/Cloudant-Offline-ToDo/master/github-data/preview_desktop.png" width="500"/>
 
-![Mobile Preview](https://raw.githubusercontent.com/DeMoehn/Cloudant-Offline-ToDo/master/github-data/preview_mobile.png)
+<img src="https://raw.githubusercontent.com/DeMoehn/Cloudant-Offline-ToDo/master/github-data/preview_mobile.png" width="200"/>
 
 ##Presentation
 Also some more detailed information is available via a [PowerPoint Presentation](https://github.com/DeMoehn/Cloudant-Offline-ToDo/blob/master/github-data/offline-todo-example.pptx)
