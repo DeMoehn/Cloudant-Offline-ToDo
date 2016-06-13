@@ -96,12 +96,12 @@ $( document ).ready(function() {
   function addTodo(title, text, colorCk) {
     console.log($('#sendtodo').attr('value'));
     // Show problems
-    if(title.value == '') {
+    if(title.value === '') {
       $('#'+title.id).addClass('inputproblem');
     }else{
       $('#'+title.id).removeClass('inputproblem');
     }
-    if(text.value == '') {
+    if(text.value === '') {
       $('#'+text.id).addClass('inputproblem');
     }else{
       $('#'+text.id).removeClass('inputproblem');
@@ -129,7 +129,7 @@ $( document ).ready(function() {
       };
 
       if($('#sendtodo').attr('value') == 'edit') {
-        console.log('SAVING in EDITMODE!')
+        console.log('SAVING in EDITMODE!');
         todo._id = currentTodo._id;
         todo._rev = currentTodo._rev;
         console.log(todo);
@@ -506,7 +506,7 @@ $( document ).ready(function() {
     $('#enterdetails').html('Enter Details:'); // Reset the Heading
     $('#sendtodo').val('save'); // Reset the save button to save-mode
     currentTodo = ''; // Reset current todo (as we have none anymore)
-    if(colorChecked != '') {
+    if(colorChecked !== '') {
       colorChecked.removeClass( 'circleclicked' ); // Remove the circle clicked
       colorChecked = ''; // Reset the circle clicked variabl
     }
