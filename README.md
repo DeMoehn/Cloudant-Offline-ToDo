@@ -4,6 +4,14 @@ Cloudant Offline ToDo List
 ##Live action?
 Demo available via: http://cloudant-offline-todo.mybluemix.net
 
+##Screenshots
+![Desktop Preview](https://raw.githubusercontent.com/DeMoehn/Cloudant-Offline-ToDo/master/github-data/preview_desktop.png)
+
+![Mobile Preview](https://raw.githubusercontent.com/DeMoehn/Cloudant-Offline-ToDo/master/github-data/preview_mobile.png)
+
+##Presentation
+Also some more detailed information is available via a [PowerPoint Presentation](https://github.com/DeMoehn/Cloudant-Offline-ToDo/blob/master/github-data/offline-todo-example.pptx)
+
 ##How to run
 
 Clone the repository and change to the "app" directory
@@ -57,6 +65,7 @@ Change to the app directory and push the inital application via (Change APPN-AME
 * Create a new Phase, make sure the GIT URL is correct, and tick the box "Run job, when GIT Repo changes"
 
 * Choose "Jobs" add a new "Deploy" Job and make sure to change the script to only include the app/ directory (otherwise Jazzhub pushes the whole repo!)
+
 ```
 #!/bin/bash
 cf push "${CF_APP}" -p app/
